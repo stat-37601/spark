@@ -544,7 +544,7 @@ def launch_cluster(conn, opts, cluster_name):
                         elif any([group.name == cluster_name + "-slaves" for group in r.groups]):
                             slave_nodes += r.instances
                         else:
-                            print >> stderr, ("WARNING: Unknown security group " % group.name)
+                            print >> stderr, ("WARNING: Unknown security groups {!r} ".format(r.groups))
                     break
                 else:
                     print "%d of %d spot instances granted, waiting longer" % (
