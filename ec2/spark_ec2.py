@@ -548,7 +548,8 @@ def launch_cluster(conn, opts, cluster_name):
                 else:
                     print "%d of %d spot instances granted, waiting longer" % (
                         len(active_instance_ids), len(my_req_ids))
-        except:
+        except Exception, e:
+            traceback.print_exc()
             print "Canceling spot instance requests"
             conn.cancel_spot_instance_requests(my_req_ids)
             # Log a warning if any of these requests actually launched instances:
