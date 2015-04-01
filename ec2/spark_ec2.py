@@ -39,6 +39,7 @@ import warnings
 from datetime import datetime
 from optparse import OptionParser
 from sys import stderr
+import traceback
 
 SPARK_EC2_VERSION = "1.3.0"
 SPARK_EC2_DIR = os.path.dirname(os.path.realpath(__file__))
