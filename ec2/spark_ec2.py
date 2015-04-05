@@ -525,7 +525,7 @@ def launch_cluster(conn, opts, cluster_name):
                 master_instance_id = None
                 for i in my_req_ids:
                     if i in id_to_req and id_to_req[i].state == "active":
-                        if opts.master_spot_price is not None and i == master_reqs.id:
+                        if opts.master_spot_price is not None and i == master_reqs[0].id:
                             master_instance_id = id_to_req[i].instance_id
                         active_instance_ids.append(id_to_req[i].instance_id)
                 if opts.master_spot_price is not None:
@@ -535,7 +535,7 @@ def launch_cluster(conn, opts, cluster_name):
                         master_nodes = []
                         slave_nodes = []
                         for r in reservations:
-                            if r.instances[0] == master_instance_id:
+                            if r.instances[0].id == master_instance_id:
                                 master_nodes += r.instances
                             else:
                                 slave_nodes += r.instances
@@ -553,7 +553,8 @@ def launch_cluster(conn, opts, cluster_name):
                 else:
                     print "%d of %d slaves granted, waiting longer" % (
                         len(active_instance_ids), opts.slaves)
-        except:
+        except Exception, e:
+            traceback.print_exc()
             print "Canceling spot instance requests"
             conn.cancel_spot_instance_requests(my_req_ids)
             # Log a warning if any of these requests actually launched instances:
