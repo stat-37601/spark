@@ -522,8 +522,11 @@ def launch_cluster(conn, opts, cluster_name):
                 for r in reqs:
                     id_to_req[r.id] = r
                 active_instance_ids = []
+                master_instance_id = None
                 for i in my_req_ids:
                     if i in id_to_req and id_to_req[i].state == "active":
+                        if opts.master_spot_price is not None and i == master_reqs.id:
+                            master_instance_id = id_to_req[i].instance_id
                         active_instance_ids.append(id_to_req[i].instance_id)
                 if opts.master_spot_price is not None:
                     if len(active_instance_ids) == opts.slaves + 1:
@@ -532,7 +535,7 @@ def launch_cluster(conn, opts, cluster_name):
                         master_nodes = []
                         slave_nodes = []
                         for r in reservations:
-                            if any([group.name == cluster_name + "-master" for group in r.groups]):
+                            if r.instances[0] == master_instance_id:
                                 master_nodes += r.instances
                             else:
                                 slave_nodes += r.instances
